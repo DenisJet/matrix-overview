@@ -71,16 +71,35 @@ const portfolioSlice = createSlice({
   initialState,
   reducers: {
     addAsset: (state, action) => {
+      const existingAsset = state.assets.find(
+        (asset) => asset.symbol === action.payload.symbol,
+      );
+
+      if (existingAsset) {
+        existingAsset.quantity += action.payload.quantity;
+        existingAsset.purchasePrice +=
+          action.payload.currentPrice * action.payload.quantity;
+        existingAsset.percentageOfPortfolio =
+          (existingAsset.purchasePrice / state.totalValue) * 100;
+      } else {
+        const newAsset = {
+          ...action.payload,
+          purchasePrice: action.payload.currentPrice * action.payload.quantity,
+          percentageOfPortfolio:
+            ((action.payload.currentPrice * action.payload.quantity) /
+              state.totalValue) *
+            100,
+        };
+        state.assets.push(newAsset);
+      }
+
       state.totalValue += action.payload.currentPrice * action.payload.quantity;
-      const newAsset = {
-        ...action.payload,
-        purchasePrice: action.payload.currentPrice * action.payload.quantity,
-        percentageOfPortfolio:
-          ((action.payload.currentPrice * action.payload.quantity) /
-            state.totalValue) *
-          100,
-      };
-      state.assets.push(newAsset);
+
+      state.assets.forEach((asset) => {
+        asset.percentageOfPortfolio =
+          (asset.purchasePrice / state.totalValue) * 100;
+      });
+
       localStorage.setItem("assets", JSON.stringify(state.assets));
     },
     removeAsset: (state, action: PayloadAction<string>) => {

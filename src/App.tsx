@@ -20,7 +20,7 @@ function App() {
     dispatch(fetchAvailableCurrencies());
   }, [dispatch]);
 
-  // useWebSocket("btcusdt");
+  // useWebSocket(assets[0].symbol);
 
   return (
     <div className={styles.mainContainer}>

@@ -13,7 +13,7 @@ interface Asset {
   symbol: string;
 }
 
-interface Currency {
+export interface Currency {
   askPrice: string;
   askQty: string;
   bidPrice: string;

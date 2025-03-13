@@ -1,13 +1,26 @@
 import { useDispatch, useSelector } from "react-redux";
 import styles from "./Modal.module.scss";
 import { AppDispatch, RootState } from "../../store/store";
-import { setIsModalOpen } from "../../store/portfolioSlice";
+import { Currency, setIsModalOpen } from "../../store/portfolioSlice";
+import { useState } from "react";
 
 export default function Modal() {
   const dispatch = useDispatch<AppDispatch>();
   const { isModalOpen, availableCurrencies } = useSelector(
     (state: RootState) => state.portfolio,
   );
+  const [filteredCurrencies, setFilteredCurrencies] = useState<Currency[]>(
+    availableCurrencies.slice(0, 15),
+  );
+
+  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const value = event.target.value;
+    setFilteredCurrencies(
+      availableCurrencies.filter((item: Currency) =>
+        item.symbol.toLowerCase().startsWith(value.toLowerCase()),
+      ),
+    );
+  };
 
   return (
     <div
@@ -46,12 +59,13 @@ export default function Modal() {
 
         <input
           className={styles.modalInput}
+          onChange={handleInputChange}
           type="text"
           placeholder="Поиск валюты"
         />
         <ul className={styles.modalAssetsList}>
-          {availableCurrencies &&
-            availableCurrencies.slice(0, 15).map((item) => {
+          {filteredCurrencies &&
+            filteredCurrencies.slice(0, 15).map((item) => {
               return (
                 <li key={item.symbol}>
                   <span>{item.symbol.slice(0, -4)}</span>

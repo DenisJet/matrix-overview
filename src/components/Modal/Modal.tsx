@@ -2,19 +2,28 @@ import { useDispatch, useSelector } from "react-redux";
 import styles from "./Modal.module.scss";
 import { AppDispatch, RootState } from "../../store/store";
 import { Currency, setIsModalOpen } from "../../store/portfolioSlice";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import Button from "../Button/Button";
 
 export default function Modal() {
   const dispatch = useDispatch<AppDispatch>();
   const { isModalOpen, availableCurrencies } = useSelector(
     (state: RootState) => state.portfolio,
   );
-  const [filteredCurrencies, setFilteredCurrencies] = useState<Currency[]>(
-    availableCurrencies.slice(0, 15),
+  const [searchValue, setSearchValue] = useState<string>("");
+  const [filteredCurrencies, setFilteredCurrencies] = useState<Currency[]>([]);
+  const [selectedCurrency, setSelectedCurrency] = useState<Currency | null>(
+    null,
   );
+  const [quantity, setQuantity] = useState<number>(1);
+
+  useEffect(() => {
+    setFilteredCurrencies(availableCurrencies.slice(0, 15));
+  }, [availableCurrencies]);
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = event.target.value;
+    setSearchValue(value);
     setFilteredCurrencies(
       availableCurrencies.filter((item: Currency) =>
         item.symbol.toLowerCase().startsWith(value.toLowerCase()),
@@ -22,12 +31,38 @@ export default function Modal() {
     );
   };
 
+  const handleModalClose = () => {
+    dispatch(setIsModalOpen(false));
+    setFilteredCurrencies(availableCurrencies.slice(0, 15));
+    setSelectedCurrency(null);
+    setSearchValue("");
+  };
+
+  const handleQuantityChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setQuantity(Number(event.target.value));
+  };
+
+  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    if (selectedCurrency && quantity > 0) {
+      console.log({
+        currency: selectedCurrency,
+        quantity: quantity,
+      });
+      // dispatch(addAsset({
+      //   currency: selectedCurrency,
+      //   quantity: quantity,
+      // }));
+      handleModalClose();
+    }
+  };
+
   return (
     <div
       className={
         isModalOpen ? `${styles.modal} ${styles.active}` : styles.modal
       }
-      onClick={() => dispatch(setIsModalOpen(false))}
+      onClick={handleModalClose}
     >
       <div
         className={
@@ -41,7 +76,7 @@ export default function Modal() {
           type="button"
           title="Закрыть"
           className={styles.button}
-          onClick={() => dispatch(setIsModalOpen(false))}
+          onClick={handleModalClose}
         >
           <svg
             width="16"
@@ -60,6 +95,7 @@ export default function Modal() {
         <input
           className={styles.modalInput}
           onChange={handleInputChange}
+          value={searchValue}
           type="text"
           placeholder="Поиск валюты"
         />
@@ -67,7 +103,7 @@ export default function Modal() {
           {filteredCurrencies &&
             filteredCurrencies.slice(0, 15).map((item) => {
               return (
-                <li key={item.symbol}>
+                <li key={item.symbol} onClick={() => setSelectedCurrency(item)}>
                   <span>{item.symbol.slice(0, -4)}</span>
                   <span>${item.askPrice}</span>
                   <span
@@ -83,6 +119,27 @@ export default function Modal() {
               );
             })}
         </ul>
+        {selectedCurrency && (
+          <form className={styles.form} onSubmit={handleSubmit}>
+            <p>
+              {selectedCurrency.symbol.slice(0, -4)} {selectedCurrency.askPrice}
+            </p>
+            <input
+              value={quantity}
+              onChange={handleQuantityChange}
+              type="number"
+              placeholder="Количество"
+              required
+              min="1"
+            />
+            <div className={styles.formButtons}>
+              <Button type="submit">Добавить</Button>
+              <Button type="button" onClick={handleModalClose}>
+                Отмена
+              </Button>
+            </div>
+          </form>
+        )}
       </div>
     </div>
   );

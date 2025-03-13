@@ -24,7 +24,8 @@
   position: relative;
   padding: 25px;
   width: 300px;
-  max-height: 450px;
+  height: fit-content;
+  // min-height: 450px;
   transform: scale(0.5);
   transition: 0.4s all;
   margin-top: 100px;
@@ -88,5 +89,31 @@
     display: flex;
     justify-content: space-between;
     cursor: pointer;
+  }
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
+  justify-content: center;
+
+  & p {
+    margin: 0;
+  }
+
+  & input {
+    font-size: 16px;
+    padding: 5px;
+    background-color: transparent;
+    color: variable.$color-secondary-5;
+    border: none;
+    border-bottom: 1px solid variable.$color-secondary-15;
+    cursor: pointer;
+  }
+
+  & .formButtons {
+    display: flex;
+    justify-content: space-around;
   }
 }

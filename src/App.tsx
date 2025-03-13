@@ -7,6 +7,7 @@ import {
   setIsModalOpen,
 } from "./store/portfolioSlice";
 import Modal from "./components/Modal/Modal";
+import Button from "./components/Button/Button";
 
 function App() {
   const dispatch = useDispatch<AppDispatch>();
@@ -22,9 +23,9 @@ function App() {
     <div>
       <header className={styles.header}>
         <h1>Portfolio Overview</h1>
-        <button type="button" onClick={() => dispatch(setIsModalOpen(true))}>
+        <Button type="button" onClick={() => dispatch(setIsModalOpen(true))}>
           Добавить
-        </button>
+        </Button>
       </header>
       {isLoading && <div>Loading...</div>}
       {error && <div>error</div>}

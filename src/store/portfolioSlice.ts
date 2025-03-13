@@ -13,18 +13,44 @@ interface Asset {
   symbol: string;
 }
 
-interface AssetState {
-  assets: Asset[];
-  availableCurrencies: Asset[];
-  isLoading: boolean;
-  error: string | null;
+interface Currency {
+  askPrice: string;
+  askQty: string;
+  bidPrice: string;
+  bidQty: string;
+  closeTime: number;
+  count: number;
+  firstId: number;
+  highPrice: string;
+  lastId: number;
+  lastPrice: string;
+  lastQty: string;
+  lowPrice: string;
+  openPrice: string;
+  openTime: number;
+  prevClosePrice: string;
+  priceChange: string;
+  priceChangePercent: string;
+  quoteVolume: string;
+  symbol: string;
+  volume: string;
+  weightedAvgPrice: string;
 }
 
-const initialState: AssetState = {
+interface PortfolioState {
+  assets: Asset[];
+  availableCurrencies: Currency[];
+  isLoading: boolean;
+  error: string | null;
+  isModalOpen: boolean;
+}
+
+const initialState: PortfolioState = {
   assets: JSON.parse(localStorage.getItem("Asset") || "[]"),
   availableCurrencies: [],
   isLoading: false,
   error: null,
+  isModalOpen: false,
 };
 
 export const fetchAvailableCurrencies = createAsyncThunk(
@@ -33,7 +59,9 @@ export const fetchAvailableCurrencies = createAsyncThunk(
     const response = await axios.get(
       "https://api.binance.com/api/v3/ticker/24hr",
     );
-    return response.data;
+    return response.data.filter((item: Currency) =>
+      item.symbol.endsWith("USDT"),
+    );
   },
 );
 
@@ -51,6 +79,9 @@ const portfolioSlice = createSlice({
         (asset) => asset.id !== action.payload,
       );
       localStorage.setItem("assets", JSON.stringify(state.assets));
+    },
+    setIsModalOpen: (state, action: PayloadAction<boolean>) => {
+      state.isModalOpen = action.payload;
     },
   },
   extraReducers: (builder) => {
@@ -70,5 +101,5 @@ const portfolioSlice = createSlice({
   },
 });
 
-export const { addAsset, removeAsset } = portfolioSlice.actions;
+export const { addAsset, removeAsset, setIsModalOpen } = portfolioSlice.actions;
 export default portfolioSlice.reducer;

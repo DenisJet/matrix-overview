@@ -1,12 +1,16 @@
 import { useEffect } from "react";
-import "./App.scss";
+import styles from "./App.module.scss";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "./store/store";
-import { fetchAvailableCurrencies } from "./store/portfolioSlice";
+import {
+  fetchAvailableCurrencies,
+  setIsModalOpen,
+} from "./store/portfolioSlice";
+import Modal from "./components/Modal/Modal";
 
 function App() {
   const dispatch = useDispatch<AppDispatch>();
-  const { assets, availableCurrencies, isLoading, error } = useSelector(
+  const { assets, isLoading, error } = useSelector(
     (state: RootState) => state.portfolio,
   );
 
@@ -16,9 +20,11 @@ function App() {
 
   return (
     <div>
-      <header className="header">
+      <header className={styles.header}>
         <h1>Portfolio Overview</h1>
-        <button type="button">Добавить</button>
+        <button type="button" onClick={() => dispatch(setIsModalOpen(true))}>
+          Добавить
+        </button>
       </header>
       {isLoading && <div>Loading...</div>}
       {error && <div>error</div>}
@@ -29,6 +35,7 @@ function App() {
           Нет активов в вашем портфеле. Добавьте что-нибудь, чтобы начать!
         </div>
       )}
+      <Modal />
     </div>
   );
 }

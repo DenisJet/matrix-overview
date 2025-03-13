@@ -1,0 +1,92 @@
+@use '/src/variables.scss' as variable;
+
+.modal {
+  height: 100vh;
+  width: 100vw;
+  background-color: rgba(0,0,0,0.7);
+  position: fixed;
+  top: 0;
+  left: 0;
+  display: flex;
+  justify-content: center; 
+  opacity: 0;
+  pointer-events: none;
+  transition: 0.5s;
+  z-index: 10;
+}
+
+.modal.active {
+  opacity: 1;
+  pointer-events: all;
+}
+
+.modalContent {
+  position: relative;
+  padding: 25px;
+  width: 300px;
+  max-height: 450px;
+  transform: scale(0.5);
+  transition: 0.4s all;
+  margin-top: 100px;
+  background-color: variable.$color-primary-5;
+  color: variable.$color-secondary-5;
+  border-radius: 15px;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.modalContent.active {
+  transform: scale(1);
+}
+
+.modalContent p {
+  margin-top: 0;
+  margin-bottom: 30px;
+  font-size: 22px;
+  font-weight: 500;
+  text-align: center;
+}
+
+.button {
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  border: none;
+  background-color: transparent;
+  cursor: pointer;
+  margin: 0;
+  padding: 5px;
+}
+
+.button:hover {
+  opacity: 0.4;
+}
+
+.button:active {
+  opacity: 0.8;
+}
+
+.modalInput {
+  font-size: 16px;
+  padding: 5px;
+  background-color: transparent;
+  color: variable.$color-secondary-5;
+  border: none;
+  border-bottom: 1px solid variable.$color-secondary-15;
+  cursor: pointer;
+}
+
+.modalAssetsList {
+  margin: 0;
+  padding: 0;
+  list-style-type: none;
+  font-size: 14px;
+  font-weight: 500;
+
+  & li {
+    display: flex;
+    justify-content: space-between;
+    cursor: pointer;
+  }
+}

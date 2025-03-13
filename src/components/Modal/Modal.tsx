@@ -16,7 +16,7 @@ export default function Modal() {
   const [selectedCurrency, setSelectedCurrency] = useState<Currency | null>(
     null,
   );
-  const [quantity, setQuantity] = useState<number | null>(null);
+  const [quantity, setQuantity] = useState<string>("");
 
   useEffect(() => {
     setFilteredCurrencies(availableCurrencies.slice(0, 15));
@@ -37,16 +37,16 @@ export default function Modal() {
     setFilteredCurrencies(availableCurrencies.slice(0, 15));
     setSelectedCurrency(null);
     setSearchValue("");
-    setQuantity(null);
+    setQuantity("");
   };
 
   const handleQuantityChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setQuantity(Number(event.target.value));
+    setQuantity(event.target.value);
   };
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    if (selectedCurrency && quantity > 0) {
+    if (selectedCurrency && Number(quantity) > 0) {
       console.log({
         currency: selectedCurrency,
         quantity: quantity,

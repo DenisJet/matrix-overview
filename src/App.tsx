@@ -4,12 +4,11 @@ import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "./store/store";
 import {
   fetchAvailableCurrencies,
-  removeAsset,
   setIsModalOpen,
 } from "./store/portfolioSlice";
 import Modal from "./components/Modal/Modal";
 import Button from "./components/Button/Button";
-// import { useWebSocket } from "./hooks/useWebSocket";
+import Row from "./components/Row/Row";
 
 function App() {
   const dispatch = useDispatch<AppDispatch>();
@@ -20,8 +19,6 @@ function App() {
   useEffect(() => {
     dispatch(fetchAvailableCurrencies());
   }, [dispatch]);
-
-  // useWebSocket(assets[0].symbol);
 
   return (
     <div className={styles.mainContainer}>
@@ -50,37 +47,7 @@ function App() {
             </thead>
             <tbody>
               {assets.map((asset) => {
-                return (
-                  <tr
-                    className={styles.boardRow}
-                    onClick={() => dispatch(removeAsset(asset.id))}
-                  >
-                    <td>{asset.name}</td>
-                    <td>{asset.quantity}</td>
-                    <td>
-                      ${" "}
-                      {asset.currentPrice
-                        .toString()
-                        .replace(/(\..{2}).*/, "$1")}
-                    </td>
-                    <td>$ {asset.purchasePrice}</td>
-                    <td
-                      style={{
-                        color: `${
-                          Number(asset.change24h) < 0 ? "red" : "green"
-                        }`,
-                      }}
-                    >
-                      {asset.change24h.toString().replace(/(\..{2}).*/, "$1")} %
-                    </td>
-                    <td>
-                      {asset.percentageOfPortfolio
-                        .toString()
-                        .replace(/(\..{2}).*/, "$1")}{" "}
-                      %
-                    </td>
-                  </tr>
-                );
+                return <Row asset={asset} />;
               })}
             </tbody>
           </table>

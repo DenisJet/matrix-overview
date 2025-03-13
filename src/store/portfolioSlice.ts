@@ -1,7 +1,7 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import axios from "axios";
 
-interface Asset {
+export interface Asset {
   id: string;
   name: string;
   quantity: number;
@@ -125,6 +125,40 @@ const portfolioSlice = createSlice({
     setIsModalOpen: (state, action: PayloadAction<boolean>) => {
       state.isModalOpen = action.payload;
     },
+    updateAsset: (
+      state,
+      action: PayloadAction<{
+        symbol: string;
+        price: number;
+        change24h: number;
+      }>,
+    ) => {
+      const { symbol, price, change24h } = action.payload;
+
+      const assetToUpdate = state.assets.find(
+        (asset) => asset.symbol === symbol,
+      );
+
+      if (assetToUpdate) {
+        const oldPurchasePrice = assetToUpdate.purchasePrice;
+
+        assetToUpdate.currentPrice = price;
+        assetToUpdate.change24h = change24h;
+
+        assetToUpdate.purchasePrice =
+          assetToUpdate.currentPrice * assetToUpdate.quantity;
+
+        state.totalValue =
+          state.totalValue - oldPurchasePrice + assetToUpdate.purchasePrice;
+
+        state.assets.forEach((asset) => {
+          asset.percentageOfPortfolio =
+            (asset.purchasePrice / state.totalValue) * 100;
+        });
+
+        localStorage.setItem("assets", JSON.stringify(state.assets));
+      }
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -143,5 +177,6 @@ const portfolioSlice = createSlice({
   },
 });
 
-export const { addAsset, removeAsset, setIsModalOpen } = portfolioSlice.actions;
+export const { addAsset, removeAsset, setIsModalOpen, updateAsset } =
+  portfolioSlice.actions;
 export default portfolioSlice.reducer;

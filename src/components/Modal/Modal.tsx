@@ -16,7 +16,7 @@ export default function Modal() {
   const [selectedCurrency, setSelectedCurrency] = useState<Currency | null>(
     null,
   );
-  const [quantity, setQuantity] = useState<number>(0);
+  const [quantity, setQuantity] = useState<number | null>(null);
 
   useEffect(() => {
     setFilteredCurrencies(availableCurrencies.slice(0, 15));
@@ -37,7 +37,7 @@ export default function Modal() {
     setFilteredCurrencies(availableCurrencies.slice(0, 15));
     setSelectedCurrency(null);
     setSearchValue("");
-    setQuantity(0);
+    setQuantity(null);
   };
 
   const handleQuantityChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -113,7 +113,9 @@ export default function Modal() {
               return (
                 <li key={item.symbol} onClick={() => setSelectedCurrency(item)}>
                   <span>{item.symbol.slice(0, -4)}</span>
-                  <span>${item.askPrice}</span>
+                  <span>
+                    ${item.askPrice.toString().replace(/(\..{2}).*/, "$1")}
+                  </span>
                   <span
                     style={{
                       color: `${

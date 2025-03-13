@@ -103,10 +103,24 @@ const portfolioSlice = createSlice({
       localStorage.setItem("assets", JSON.stringify(state.assets));
     },
     removeAsset: (state, action: PayloadAction<string>) => {
-      state.assets = state.assets.filter(
-        (asset) => asset.id !== action.payload,
+      const removedAsset = state.assets.find(
+        (asset) => asset.id === action.payload,
       );
-      localStorage.setItem("assets", JSON.stringify(state.assets));
+
+      if (removedAsset) {
+        state.totalValue -= removedAsset.purchasePrice;
+
+        state.assets = state.assets.filter(
+          (asset) => asset.id !== action.payload,
+        );
+
+        state.assets.forEach((asset) => {
+          asset.percentageOfPortfolio =
+            (asset.purchasePrice / state.totalValue) * 100;
+        });
+
+        localStorage.setItem("assets", JSON.stringify(state.assets));
+      }
     },
     setIsModalOpen: (state, action: PayloadAction<boolean>) => {
       state.isModalOpen = action.payload;

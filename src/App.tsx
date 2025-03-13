@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "./store/store";
 import {
   fetchAvailableCurrencies,
+  removeAsset,
   setIsModalOpen,
 } from "./store/portfolioSlice";
 import Modal from "./components/Modal/Modal";
@@ -50,7 +51,10 @@ function App() {
             <tbody>
               {assets.map((asset) => {
                 return (
-                  <tr className={styles.boardRow}>
+                  <tr
+                    className={styles.boardRow}
+                    onClick={() => dispatch(removeAsset(asset.id))}
+                  >
                     <td>{asset.name}</td>
                     <td>{asset.quantity}</td>
                     <td>

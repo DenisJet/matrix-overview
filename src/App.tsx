@@ -8,6 +8,7 @@ import {
 } from "./store/portfolioSlice";
 import Modal from "./components/Modal/Modal";
 import Button from "./components/Button/Button";
+// import { useWebSocket } from "./hooks/useWebSocket";
 
 function App() {
   const dispatch = useDispatch<AppDispatch>();
@@ -19,6 +20,8 @@ function App() {
     dispatch(fetchAvailableCurrencies());
   }, [dispatch]);
 
+  // useWebSocket("btcusdt");
+
   return (
     <div className={styles.mainContainer}>
       <header className={styles.header}>
@@ -27,13 +30,56 @@ function App() {
           Добавить
         </Button>
       </header>
-      <div className={styles.board}>
+      <div className={styles.boardContainer}>
         {isLoading ? (
           <p>Loading...</p>
         ) : error ? (
           <p>error</p>
         ) : assets && assets.length > 0 ? (
-          <p>assets</p>
+          <table className={styles.board}>
+            <thead className={styles.boardRow}>
+              <tr>
+                <td>Актив</td>
+                <td>Количество</td>
+                <td>Цена</td>
+                <td>Общая стоимость</td>
+                <td>Изм. за 24 ч.</td>
+                <td>% портфеля</td>
+              </tr>
+            </thead>
+            <tbody>
+              {assets.map((asset) => {
+                return (
+                  <tr className={styles.boardRow}>
+                    <td>{asset.name}</td>
+                    <td>{asset.quantity}</td>
+                    <td>
+                      ${" "}
+                      {asset.currentPrice
+                        .toString()
+                        .replace(/(\..{2}).*/, "$1")}
+                    </td>
+                    <td>$ {asset.purchasePrice}</td>
+                    <td
+                      style={{
+                        color: `${
+                          Number(asset.change24h) < 0 ? "red" : "green"
+                        }`,
+                      }}
+                    >
+                      {asset.change24h.toString().replace(/(\..{2}).*/, "$1")} %
+                    </td>
+                    <td>
+                      {asset.percentageOfPortfolio
+                        .toString()
+                        .replace(/(\..{2}).*/, "$1")}{" "}
+                      %
+                    </td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
         ) : (
           <p>
             Нет активов в вашем портфеле. Добавьте что-нибудь, чтобы начать!

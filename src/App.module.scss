@@ -17,8 +17,25 @@
   }
 }
 
-.board {
+.boardContainer {
+  margin-top: 50px;
   display: flex;
   justify-content: center;
+  width: 100%;
+  overflow-x: auto;
 }
 
+.board {
+  width: 100%;
+
+  & thead td {
+    font-weight: 600;
+    text-decoration: underline;
+  }
+
+  & td {
+    padding: 10px;
+    white-space: nowrap;
+    text-align: center;
+  }
+}

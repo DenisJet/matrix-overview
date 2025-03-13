@@ -1,6 +1,5 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import axios from "axios";
-import { v4 } from "uuid";
 
 interface Asset {
   id: string;
@@ -43,14 +42,16 @@ interface PortfolioState {
   isLoading: boolean;
   error: string | null;
   isModalOpen: boolean;
+  totalValue: number;
 }
 
 const initialState: PortfolioState = {
-  assets: JSON.parse(localStorage.getItem("Asset") || "[]"),
+  assets: JSON.parse(localStorage.getItem("assets") || "[]"),
   availableCurrencies: [],
   isLoading: false,
   error: null,
   isModalOpen: false,
+  totalValue: 0,
 };
 
 export const fetchAvailableCurrencies = createAsyncThunk(
@@ -69,8 +70,16 @@ const portfolioSlice = createSlice({
   name: "portfolio",
   initialState,
   reducers: {
-    addAsset: (state, action: PayloadAction<Omit<Asset, "id">>) => {
-      const newAsset = { ...action.payload, id: v4() };
+    addAsset: (state, action) => {
+      state.totalValue += action.payload.currentPrice * action.payload.quantity;
+      const newAsset = {
+        ...action.payload,
+        purchasePrice: action.payload.currentPrice * action.payload.quantity,
+        percentageOfPortfolio:
+          ((action.payload.currentPrice * action.payload.quantity) /
+            state.totalValue) *
+          100,
+      };
       state.assets.push(newAsset);
       localStorage.setItem("assets", JSON.stringify(state.assets));
     },

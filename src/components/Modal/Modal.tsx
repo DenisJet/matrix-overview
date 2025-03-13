@@ -1,9 +1,10 @@
 import { useDispatch, useSelector } from "react-redux";
 import styles from "./Modal.module.scss";
 import { AppDispatch, RootState } from "../../store/store";
-import { Currency, setIsModalOpen } from "../../store/portfolioSlice";
+import { addAsset, Currency, setIsModalOpen } from "../../store/portfolioSlice";
 import { useEffect, useState } from "react";
 import Button from "../Button/Button";
+import { v4 } from "uuid";
 
 export default function Modal() {
   const dispatch = useDispatch<AppDispatch>();
@@ -50,10 +51,16 @@ export default function Modal() {
         currency: selectedCurrency,
         quantity: quantity,
       });
-      // dispatch(addAsset({
-      //   currency: selectedCurrency,
-      //   quantity: quantity,
-      // }));
+      dispatch(
+        addAsset({
+          id: v4(),
+          name: selectedCurrency.symbol.slice(0, -4),
+          symbol: selectedCurrency.symbol,
+          quantity: quantity,
+          currentPrice: selectedCurrency.askPrice,
+          change24h: selectedCurrency.priceChangePercent,
+        }),
+      );
       handleModalClose();
     }
   };

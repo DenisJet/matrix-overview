@@ -15,7 +15,7 @@ export default function Modal() {
   const [selectedCurrency, setSelectedCurrency] = useState<Currency | null>(
     null,
   );
-  const [quantity, setQuantity] = useState<number>(1);
+  const [quantity, setQuantity] = useState<number>(0);
 
   useEffect(() => {
     setFilteredCurrencies(availableCurrencies.slice(0, 15));
@@ -36,6 +36,7 @@ export default function Modal() {
     setFilteredCurrencies(availableCurrencies.slice(0, 15));
     setSelectedCurrency(null);
     setSearchValue("");
+    setQuantity(0);
   };
 
   const handleQuantityChange = (event: React.ChangeEvent<HTMLInputElement>) => {

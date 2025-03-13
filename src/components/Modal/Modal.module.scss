@@ -25,7 +25,6 @@
   padding: 25px;
   width: 300px;
   height: fit-content;
-  // min-height: 450px;
   transform: scale(0.5);
   transition: 0.4s all;
   margin-top: 100px;
@@ -89,6 +88,10 @@
     display: flex;
     justify-content: space-between;
     cursor: pointer;
+
+    &:hover {
+      opacity: 0.5;
+    }
   }
 }
 

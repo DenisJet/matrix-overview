@@ -1,19 +1,24 @@
 @use '/src/variables.scss' as variable;
 
-#root {
+.mainContainer {
   max-width: 1280px;
   margin: 0 auto;
+  padding: 10px;
 }
 
 .header {
   display: flex;
   justify-content: space-between;
-  padding: 10px;
 
   & h1 {
     font-weight: 400;
     font-size: 20px;
     text-transform: uppercase;
   }
+}
+
+.board {
+  display: flex;
+  justify-content: center;
 }
 

@@ -20,22 +20,26 @@ function App() {
   }, [dispatch]);
 
   return (
-    <div>
+    <div className={styles.mainContainer}>
       <header className={styles.header}>
         <h1>Portfolio Overview</h1>
         <Button type="button" onClick={() => dispatch(setIsModalOpen(true))}>
           Добавить
         </Button>
       </header>
-      {isLoading && <div>Loading...</div>}
-      {error && <div>error</div>}
-      {assets && assets.length > 0 ? (
-        <div>assets</div>
-      ) : (
-        <div>
-          Нет активов в вашем портфеле. Добавьте что-нибудь, чтобы начать!
-        </div>
-      )}
+      <div className={styles.board}>
+        {isLoading ? (
+          <p>Loading...</p>
+        ) : error ? (
+          <p>error</p>
+        ) : assets && assets.length > 0 ? (
+          <p>assets</p>
+        ) : (
+          <p>
+            Нет активов в вашем портфеле. Добавьте что-нибудь, чтобы начать!
+          </p>
+        )}
+      </div>
       <Modal />
     </div>
   );

@@ -52,7 +52,7 @@ function App() {
             </tbody>
           </table>
         ) : (
-          <p>
+          <p className={styles.noActive}>
             Нет активов в вашем портфеле. Добавьте что-нибудь, чтобы начать!
           </p>
         )}

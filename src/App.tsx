@@ -47,7 +47,7 @@ function App() {
             </thead>
             <tbody>
               {assets.map((asset) => {
-                return <Row asset={asset} />;
+                return <Row asset={asset} key={asset.id} />;
               })}
             </tbody>
           </table>

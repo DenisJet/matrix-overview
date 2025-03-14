@@ -47,16 +47,12 @@ export default function Modal() {
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     if (selectedCurrency && Number(quantity) > 0) {
-      console.log({
-        currency: selectedCurrency,
-        quantity: quantity,
-      });
       dispatch(
         addAsset({
           id: v4(),
           name: selectedCurrency.symbol.slice(0, -4),
           symbol: selectedCurrency.symbol,
-          quantity: quantity,
+          quantity: Number(quantity),
           currentPrice: selectedCurrency.askPrice,
           change24h: selectedCurrency.priceChangePercent,
         }),

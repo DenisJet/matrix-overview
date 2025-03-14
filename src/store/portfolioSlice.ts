@@ -51,8 +51,18 @@ const initialState: PortfolioState = {
   isLoading: false,
   error: null,
   isModalOpen: false,
-  totalValue: 0,
+  totalValue: JSON.parse(localStorage.getItem("assets") || "[]").reduce(
+    (total: number, asset: Asset) => total + asset.purchasePrice,
+    0,
+  ),
 };
+
+if (initialState.assets.length > 0) {
+  initialState.assets.forEach((asset) => {
+    asset.percentageOfPortfolio =
+      (asset.purchasePrice / initialState.totalValue) * 100;
+  });
+}
 
 export const fetchAvailableCurrencies = createAsyncThunk(
   "portfolio/fetchAvailableCurrencies",

@@ -12,7 +12,6 @@ export const useWebSocket = (symbol: string) => {
 
     ws.onmessage = (event) => {
       const data = JSON.parse(event.data);
-      console.log(data);
       const { s: symbol, c: price, P: change24h } = data;
 
       dispatch(

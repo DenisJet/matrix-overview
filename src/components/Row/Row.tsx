@@ -18,7 +18,7 @@ export default function Row({ asset }: { asset: Asset }) {
       <td>{asset.name}</td>
       <td>{asset.quantity}</td>
       <td>$ {asset.currentPrice.toString().replace(/(\..{2}).*/, "$1")}</td>
-      <td>$ {asset.purchasePrice}</td>
+      <td>$ {asset.purchasePrice.toString().replace(/(\..{2}).*/, "$1")}</td>
       <td
         style={{
           color: `${Number(asset.change24h) < 0 ? "red" : "green"}`,
